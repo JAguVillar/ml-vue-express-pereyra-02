@@ -38,9 +38,17 @@ export default {
         })
         .then(() => {
           // always executed
+          this.calcular()
         })
+    },
+    calcular () {
+      this.items.forEach(element => {
+        console.log(element.price);
+      });
+      this.items.sort((a, b) => (a.price < b.price) ? 1 : -1)
+      console.log(this.items);
     }
-  }
+  },
 };
 </script>
 
