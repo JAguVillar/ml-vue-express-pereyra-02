@@ -1,10 +1,12 @@
 <template>
-  <div class="home">
-    <img
-      alt="Vue logo"
-      src="../assets/logo.png"
-    >
-  </div>
+  <v-app>
+    <!-- Must have the app property -->
+    <v-app-bar app></v-app-bar>
+
+    <v-main>
+      Hello World
+    </v-main>
+  </v-app>
 </template>
 
 <script>
@@ -43,10 +45,10 @@ export default {
     },
     calcular () {
       this.items.forEach(element => {
-        console.log(element.price);
-      });
+        console.log(element.price)
+      })
       this.items.sort((a, b) => (a.price < b.price) ? 1 : -1)
-      console.log(this.items);
+      console.log(this.items)
     }
   },
 };

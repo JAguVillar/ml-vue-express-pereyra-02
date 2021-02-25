@@ -1,59 +1,81 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router" target="_blank" rel="noopener">router</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
-  </div>
+  <v-container>
+    <v-data-table
+      loading
+      multi-sort
+      dense
+      :headers="headers"
+      :items="items"
+      :items-per-page="5"
+      class="elevation-1"
+    >
+      <template v-slot:item.permalink="{ item }">
+        <a :href="item.permalink">
+          {{ item.permalink }}
+        </a>
+      </template>
+      <template v-slot:item.thumbnail="{ item }">
+        <a :href="item.thumbnail">
+          {{ item.thumbnail }}
+        </a>
+      </template>
+    </v-data-table>
+  </v-container>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
-  }
-}
+  data () {
+    return {
+      variable: 'hola',
+      headers: [
+        {
+          text: 'ID MLA',
+          align: 'start',
+          sortable: false,
+          value: 'id',
+        },
+        { text: 'Articulo', value: 'title' },
+        { text: 'Precio', value: 'price' },
+        { text: 'Link', value: 'permalink' },
+        { text: 'Imagen', value: 'thumbnail' },
+        { text: 'Vendedor', value: 'seller.permalink' },
+      ],
+      items: [],
+      loading: true
+    }
+  },
+  created () {
+  },
+  mounted () {
+    this.fetch()
+  },
+  methods: {
+    fetch () {
+      this.$axios.get("https://api.mercadolibre.com/sites/MLA/search?q=ssd")
+        .then((response) => {
+          // handle success
+          this.items = response.data.results
+          console.log(this.items)
+          this.loading = false
+        })
+        .catch((error) => {
+          // handle error
+          console.log(error)
+        })
+        .then(() => {
+          // always executed
+        })
+    },
+    // calcular () {
+    //   this.items.forEach(element => {
+    //     console.log(element.price)
+    //   })
+    //   this.items.sort((a, b) => (a.price < b.price) ? 1 : -1)
+    //   console.log(this.items)
+    // }
+  },
+};
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>
+
